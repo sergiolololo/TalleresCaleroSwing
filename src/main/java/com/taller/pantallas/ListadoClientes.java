@@ -55,15 +55,7 @@ public class ListadoClientes extends ComunPantalla {
 		btnEditar.setToolTipText("Editar cliente");
 		btnEditar.setBounds(527, 20, 159, 33);
 		btnEditar.addActionListener(e -> {
-			try {
-				Object[] fila = new Object[tabla.getModel().getColumnCount()];
-				for(int i = 0; i< tabla.getModel().getColumnCount(); i++){
-					fila[i] = tabla.getModel().getValueAt(tabla.getSelectedRow(), i);
-				}
-				new PanelInsertarCliente(padre, false, fila, crearWindowsListener());
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
+			abrirPanelEdicion(padre);
 		});
 	}
 
@@ -72,6 +64,19 @@ public class ListadoClientes extends ComunPantalla {
 		btnEliminar = new JButton("Eliminar cliente");
 		btnEliminar.setToolTipText("Eliminar cliente");
 		btnEliminar.setBounds(702, 20, 159, 33);
+	}
+
+	@Override
+	protected void abrirPanelEdicion(JFrame padre) {
+		try {
+			Object[] fila = new Object[tabla.getModel().getColumnCount()];
+			for(int i = 0; i< tabla.getModel().getColumnCount(); i++){
+				fila[i] = tabla.getModel().getValueAt(tabla.getSelectedRow(), i);
+			}
+			new PanelInsertarCliente(padre, false, fila, crearWindowsListener());
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override

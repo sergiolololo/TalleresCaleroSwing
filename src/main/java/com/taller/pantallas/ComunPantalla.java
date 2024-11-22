@@ -1,6 +1,7 @@
 package com.taller.pantallas;
 
 import com.taller.jdialog.PanelInsertarCliente;
+import com.taller.jdialog.PanelInsertarMaterial;
 import com.taller.negocio.impl.*;
 
 import javax.swing.*;
@@ -11,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.geom.RoundRectangle2D;
+import java.io.IOException;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,19 @@ public abstract class ComunPantalla extends JDialog {
                 btnEliminar.setEnabled(tabla.getSelectedRow() >= 0);
             }
         });
+
+        tabla.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table =(JTable) mouseEvent.getSource();
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                    btnEditar.setEnabled(tabla.getSelectedRow() >= 0);
+                    btnEliminar.setEnabled(tabla.getSelectedRow() >= 0);
+                    abrirPanelEdicion(padre);
+                }
+            }
+        });
+
+
         tabla.setModel(new DefaultTableModel(new Object[0][], getNombreColumnas()){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -233,6 +248,7 @@ public abstract class ComunPantalla extends JDialog {
     protected abstract void configurarBotonNuevo(JFrame padre);
     protected abstract void configurarBotonEditar(JFrame padre);
     protected abstract void configurarBotonEliminar();
+    protected abstract void abrirPanelEdicion(JFrame padre);
     protected abstract String getMensajeEliminar();
     protected abstract Object[] aniadirFilaCargarTabla(Object object);
     protected abstract Object[] aniadirFilaNoModelCargarTabla(Object object);

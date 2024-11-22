@@ -61,15 +61,7 @@ public class ListadoCitas extends ComunPantalla {
 		btnEditar.setToolTipText("Editar cita");
 		btnEditar.setBounds(636, 30, 159, 33);
 		btnEditar.addActionListener(e -> {
-			try {
-				Object[] fila = new Object[tabla.getModel().getColumnCount()];
-				for(int i = 0; i< tabla.getModel().getColumnCount(); i++){
-					fila[i] = tabla.getModel().getValueAt(tabla.getSelectedRow(), i);
-				}
-				new PanelEdicionCita(padre, fila, false, null, crearWindowsListener(), false);
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
+			abrirPanelEdicion(padre);
 		});
 	}
 
@@ -78,6 +70,19 @@ public class ListadoCitas extends ComunPantalla {
 		btnEliminar = new JButton("Eliminar cita");
 		btnEliminar.setToolTipText("Eliminar cita");
 		btnEliminar.setBounds(849, 30, 159, 33);
+	}
+
+	@Override
+	protected void abrirPanelEdicion(JFrame padre) {
+		try {
+			Object[] fila = new Object[tabla.getModel().getColumnCount()];
+			for(int i = 0; i< tabla.getModel().getColumnCount(); i++){
+				fila[i] = tabla.getModel().getValueAt(tabla.getSelectedRow(), i);
+			}
+			new PanelEdicionCita(padre, fila, false, null, crearWindowsListener(), false);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override

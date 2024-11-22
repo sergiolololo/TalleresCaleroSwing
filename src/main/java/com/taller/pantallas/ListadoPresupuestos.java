@@ -67,15 +67,7 @@ public class ListadoPresupuestos extends ComunPantalla {
 		btnEditar.setToolTipText("Editar presupuesto");
 		btnEditar.setBounds(636, 30, 159, 33);
 		btnEditar.addActionListener(e -> {
-			try {
-				Object[] fila = new Object[tabla.getModel().getColumnCount()];
-				for(int i = 0; i< tabla.getModel().getColumnCount(); i++){
-					fila[i] = tabla.getModel().getValueAt(tabla.getSelectedRow(), i);
-				}
-				new PanelEdicionPresupuesto(padre, fila, false, null, crearWindowsListener(), true);
-			} catch (IOException ex) {
-				throw new RuntimeException(ex);
-			}
+			abrirPanelEdicion(padre);
 		});
 	}
 
@@ -84,6 +76,19 @@ public class ListadoPresupuestos extends ComunPantalla {
 		btnEliminar = new JButton("Eliminar presupuesto");
 		btnEliminar.setToolTipText("Eliminar presupuesto");
 		btnEliminar.setBounds(849, 30, 159, 33);
+	}
+
+	@Override
+	protected void abrirPanelEdicion(JFrame padre) {
+		try {
+			Object[] fila = new Object[tabla.getModel().getColumnCount()];
+			for(int i = 0; i< tabla.getModel().getColumnCount(); i++){
+				fila[i] = tabla.getModel().getValueAt(tabla.getSelectedRow(), i);
+			}
+			new PanelEdicionPresupuesto(padre, fila, false, null, crearWindowsListener(), true);
+		} catch (IOException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override

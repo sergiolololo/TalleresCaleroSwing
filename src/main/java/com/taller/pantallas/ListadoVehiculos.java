@@ -51,11 +51,7 @@ public class ListadoVehiculos extends ComunPantalla {
 		btnEditar = new JButton("Editar vehículo");
 		btnEditar.setToolTipText("Editar vehículo");
 		btnEditar.addActionListener(e -> {
-			Object[] fila = new Object[tabla.getModel().getColumnCount()];
-			for(int i = 0; i< tabla.getModel().getColumnCount(); i++){
-				fila[i] = tabla.getModel().getValueAt(tabla.getSelectedRow(), i);
-			}
-			new PanelInsertarVehiculo(padre, false, fila, crearWindowsListener());
+			abrirPanelEdicion(padre);
 		});
 		btnEditar.setBounds(527, 20, 159, 33);
 	}
@@ -65,6 +61,15 @@ public class ListadoVehiculos extends ComunPantalla {
 		btnEliminar = new JButton("Eliminar vehículo");
 		btnEliminar.setToolTipText("Eliminar vehículo");
 		btnEliminar.setBounds(702, 20, 159, 33);
+	}
+
+	@Override
+	protected void abrirPanelEdicion(JFrame padre) {
+		Object[] fila = new Object[tabla.getModel().getColumnCount()];
+		for(int i = 0; i< tabla.getModel().getColumnCount(); i++){
+			fila[i] = tabla.getModel().getValueAt(tabla.getSelectedRow(), i);
+		}
+		new PanelInsertarVehiculo(padre, false, fila, crearWindowsListener());
 	}
 
 	@Override
