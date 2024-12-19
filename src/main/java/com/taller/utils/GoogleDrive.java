@@ -87,7 +87,7 @@ public class GoogleDrive {
                 .build();
         LocalServerReceiver receiver = new LocalServerReceiver.Builder().setPort(8888).build();
         //returns an authorized Credential object.
-        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
+        return new AuthorizationCodeInstalledApp(flow, receiver).authorize("sherrerahiguera@gmail.com");
     }
 
     private static void initService() throws GeneralSecurityException, IOException {

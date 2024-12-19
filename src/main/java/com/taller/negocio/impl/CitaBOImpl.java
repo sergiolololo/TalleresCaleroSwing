@@ -271,6 +271,45 @@ public class CitaBOImpl extends  ComunImpl {
 		return citaBean;
 	}
 
+	public List<CitaBean> obtenerClientesConRevisionDentroDeUnMes() throws SQLException {
+		List<CitaBean> resultado = new ArrayList<>();
+		ResultSet resultSet = null;
+		try {
+			String consulta = "SELECT cc.ID_CLIENTE, cc.NOMBRE, cc.APELLIDO, bb.ID_VEHICULO, bb.MARCA, bb.MODELO, aa.ID_CITA, aa.FECHA \n" +
+					"FROM CLIENTE cc \n" +
+					"JOIN VEHICULO bb ON bb.ID_CLIENTE = cc.ID_CLIENTE \n" +
+					"JOIN CITA aa ON aa.ID_VEHICULO = bb.ID_VEHICULO \n" +
+					"WHERE (sysdate - aa.FECHA) >= 335 AND (sysdate - aa.FECHA) <= 366 \n" +
+					"AND (upper(aa.DESCRIPCION) LIKE '%REVISION%' OR upper(aa.DESCRIPCION) LIKE '%REVISIÓN%')";
+			resultSet = obtenerStatement().executeQuery(consulta);
+
+			while(resultSet.next()) {
+				ClienteBean clienteBean = new ClienteBean();
+				clienteBean.setId(resultSet.getInt("ID_CLIENTE"));
+				clienteBean.setNombre(resultSet.getString("NOMBRE"));
+				clienteBean.setApellido(resultSet.getString("APELLIDO"));
+				VehiculoBean vehiculoBean = new VehiculoBean();
+				vehiculoBean.setId(resultSet.getInt("ID_VEHICULO"));
+				vehiculoBean.setMarca(resultSet.getString("MARCA"));
+				vehiculoBean.setModelo(resultSet.getString("MODELO"));
+				vehiculoBean.setClienteBean(clienteBean);
+				CitaBean citaBean = new CitaBean();
+				citaBean.setId(resultSet.getInt("ID_CITA"));
+				citaBean.setFecha(resultSet.getDate("FECHA"));
+				citaBean.setVehiculoBean(vehiculoBean);
+				resultado.add(citaBean);
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		} finally {
+			if(resultSet != null && !resultSet.isClosed()){
+				resultSet.close();
+			}
+			cerrarConexion();
+		}
+		return resultado;
+	}
+
 	private double round(double value) {
 		long factor = (long) Math.pow(10, 2);
 		value = value * factor;
