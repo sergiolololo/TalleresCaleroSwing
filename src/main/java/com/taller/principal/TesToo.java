@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Serial;
 import java.security.GeneralSecurityException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -33,6 +34,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.stereotype.Service;
 
 import com.taller.clases.ImagenPanel;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.LineBorder;
 
 @Service
 public class TesToo extends JFrame {
@@ -50,8 +55,11 @@ public class TesToo extends JFrame {
 	private final ClienteBOImpl clienteBO = new ClienteBOImpl();
 	private final VehiculoBOImpl vehiculoBO = new VehiculoBOImpl();
 	
-	private JButton btnPresupuestos, btnFinanzas, btnCitas, btnProv/*, recambios*/;
-	private JTextArea txtNotificaciones;
+	private JButton btnPresupuestos, btnFinanzas, btnCitas, btnProv, btnNotificacion/*, recambios*/;
+	private JTextArea txtNotifRevisiones, txtNotifCitas;
+	
+	private JPanel panelNotificaiones;
+	private JPanel panel;
 
 	/**
 	 * Create the application.
@@ -70,26 +78,65 @@ public class TesToo extends JFrame {
 		ventanaPrincipal.setFont(new Font("Lucida Console", Font.PLAIN, 10));
 		ventanaPrincipal.getContentPane().setLayout(null);
 		ventanaPrincipal.addMouseMotionListener(new MouseMotionAdapter() {
-	           public void mouseDragged(MouseEvent e) {
-	               Point p = MouseInfo.getPointerInfo().getLocation();
-	               ventanaPrincipal.setLocation(p.x - TesToo.x, p.y - TesToo.y);
-	            }
-	         });
-	         ventanaPrincipal.addMouseListener(new MouseAdapter() {
-	            public void mouseClicked(MouseEvent e) {
-	            	TesToo.x = e.getX();
-	            	TesToo.y = e.getY();
-	            }
-	         });
-
-		//contentPanePpal = new JPanel();
-		//contentPanePpal.setLayout(null);
+           public void mouseDragged(MouseEvent e) {
+               Point p = MouseInfo.getPointerInfo().getLocation();
+               ventanaPrincipal.setLocation(p.x - TesToo.x, p.y - TesToo.y);
+            }
+         });
+         ventanaPrincipal.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+            	TesToo.x = e.getX();
+            	TesToo.y = e.getY();
+            }
+         });
 		
 		ImagenPanel imageP = new ImagenPanel("images/Fondo_APP.jpg");
 		//ImagenPanel imageP = new ImagenPanel("/images/pexels-fwstudio-164005.jpg");
-		imageP.setBounds(0, 0, 900, 600);
+		imageP.setBounds(0, 0, 900, 553);
 		imageP.setLayout(null);
 		ventanaPrincipal.getContentPane().add(imageP);
+		
+		
+		
+		
+		panelNotificaiones = new JPanel();
+		panelNotificaiones.setBorder(new LineBorder(new Color(0, 0, 0)));
+        panelNotificaiones.setForeground(new Color(255, 255, 255));
+        panelNotificaiones.setBackground(new Color(255, 255, 255));
+        panelNotificaiones.setBounds(519, 61, 358, 420);
+        panelNotificaiones.setLayout(null);
+        panelNotificaiones.setVisible(false);
+        imageP.add(panelNotificaiones);
+        
+        JLabel lblNewLabel = new JLabel("Notificaciones:");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel.setBounds(10, 10, 207, 22);
+		panelNotificaiones.add(lblNewLabel);
+		
+        txtNotifRevisiones = new JTextArea();
+        txtNotifRevisiones.setBounds(10, 40, 338, 58);
+		txtNotifRevisiones.setEditable(false);
+		//txtNotificaciones.setBounds(519, 417, 358, 64);
+		panelNotificaiones.add(txtNotifRevisiones);
+		
+		txtNotifCitas = new JTextArea();
+		txtNotifCitas.setEditable(false);
+		txtNotifCitas.setBounds(10, 108, 338, 58);
+		panelNotificaiones.add(txtNotifCitas);
+		
+		panel = new JPanel();
+		panel.setBounds(10, 176, 338, 58);
+		panelNotificaiones.add(panel);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 244, 338, 151);
+		panelNotificaiones.add(scrollPane);
+		
+		
+		
+		
+		
+		
 		
 		JLabel lblCerrar = new JLabel("X");
 		lblCerrar.setToolTipText("Cerrar la aplicación?");
@@ -252,11 +299,24 @@ public class TesToo extends JFrame {
 		btnPresupuestos.setBounds(486, 347, 274, 84);
 		btnPresupuestos.addActionListener(e -> /*JOptionPane.showMessageDialog(null, "Se desbloquea con el nivel 100 del pase de batalla")*/ new ListadoPresupuestos(ventanaPrincipal,true));
 		imageP.add(btnPresupuestos);
-		
-		txtNotificaciones = new JTextArea();
-		txtNotificaciones.setEditable(false);
-		txtNotificaciones.setBounds(192, 461, 503, 64);
-		imageP.add(txtNotificaciones);
+
+		btnNotificacion = new JButton("");
+		btnNotificacion.addActionListener(e -> panelNotificaiones.setVisible(!panelNotificaiones.isVisible()));
+		btnNotificacion.setHorizontalAlignment(SwingConstants.LEFT);
+		btnNotificacion.setToolTipText("Citas de clientes");
+/*		BufferedImage master5 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("images/notification.png")));
+		Image scaled5 = master5.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH);
+		btnNotificacion.setIcon(new ImageIcon(scaled5));*/
+		btnNotificacion.setFont(new Font("Arial", Font.BOLD, 16));
+		btnNotificacion.setForeground(Color.BLACK);
+		btnNotificacion.setBounds(826, 491, 51, 34);
+		btnNotificacion.setOpaque(true);
+		btnNotificacion.setContentAreaFilled(false);
+		btnNotificacion.setFocusPainted(false);
+		btnNotificacion.setBorderPainted(false);
+		btnNotificacion.setCursor(new Cursor(Constantes.CURSOR_HAND));
+		imageP.add(btnNotificacion);
+
 		/*
 		 * Ponemos el LookAndFeel
 		 */
@@ -391,17 +451,29 @@ public class TesToo extends JFrame {
 	}
 
 	private void cargarNotificaciones() {
-		txtNotificaciones.setText("Notificaciones:\n");
-		txtNotificaciones.append("Revisiones próximas:\n");
-
         try {
             List<CitaBean> lista = citaBO.obtenerClientesConRevisionDentroDeUnMes();
-			System.out.println("Revisiones próximas: " + lista.size());
+
+			String imagen = "images/notification.png";
+			if (lista.isEmpty()) {
+				txtNotifRevisiones.append("   No hay revisiones próximas.\n");
+				imagen = "images/noNotification.png";
+			}else {
+				txtNotifRevisiones.append("   Próxima revisión:\n");
+			}
+			BufferedImage master5 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource(imagen)));
+			Image scaled5 = master5.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH);
+			btnNotificacion.setIcon(new ImageIcon(scaled5));
+
 			for(CitaBean cita: lista){
-				txtNotificaciones.append("Cliente: " + cita.getVehiculoBean().getClienteBean().getNombre() + " " + cita.getVehiculoBean().getClienteBean().getApellido() + " - Última revisión: " + cita.getFecha() + "\n");
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				String fecha = sdf.format(cita.getFecha());
+				txtNotifRevisiones.append("   Cliente: " + cita.getVehiculoBean().getClienteBean().getNombre() + " " + cita.getVehiculoBean().getClienteBean().getApellido() + " - Última revisión: " + fecha + "\n");
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
