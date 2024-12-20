@@ -29,6 +29,9 @@ import com.taller.negocio.impl.ClienteBOImpl;
 import com.taller.negocio.impl.VehiculoBOImpl;
 import com.taller.pantallas.*;
 import com.taller.utils.GoogleDrive;
+
+import layout.TableLayout;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.springframework.stereotype.Service;
@@ -59,7 +62,7 @@ public class TesToo extends JFrame {
 	private JTextArea txtNotifRevisiones, txtNotifCitas;
 	
 	private JPanel panelNotificaiones;
-	private JPanel panel;
+	private JTextArea txtrFsdfsdSdFsd;
 
 	/**
 	 * Create the application.
@@ -89,54 +92,13 @@ public class TesToo extends JFrame {
             	TesToo.y = e.getY();
             }
          });
-		
+
 		ImagenPanel imageP = new ImagenPanel("images/Fondo_APP.jpg");
-		//ImagenPanel imageP = new ImagenPanel("/images/pexels-fwstudio-164005.jpg");
 		imageP.setBounds(0, 0, 900, 553);
 		imageP.setLayout(null);
 		ventanaPrincipal.getContentPane().add(imageP);
-		
-		
-		
-		
-		panelNotificaiones = new JPanel();
-		panelNotificaiones.setBorder(new LineBorder(new Color(0, 0, 0)));
-        panelNotificaiones.setForeground(new Color(255, 255, 255));
-        panelNotificaiones.setBackground(new Color(255, 255, 255));
-        panelNotificaiones.setBounds(519, 61, 358, 420);
-        panelNotificaiones.setLayout(null);
-        panelNotificaiones.setVisible(false);
-        imageP.add(panelNotificaiones);
-        
-        JLabel lblNewLabel = new JLabel("Notificaciones:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel.setBounds(10, 10, 207, 22);
-		panelNotificaiones.add(lblNewLabel);
-		
-        txtNotifRevisiones = new JTextArea();
-        txtNotifRevisiones.setBounds(10, 40, 338, 58);
-		txtNotifRevisiones.setEditable(false);
-		//txtNotificaciones.setBounds(519, 417, 358, 64);
-		panelNotificaiones.add(txtNotifRevisiones);
-		
-		txtNotifCitas = new JTextArea();
-		txtNotifCitas.setEditable(false);
-		txtNotifCitas.setBounds(10, 108, 338, 58);
-		panelNotificaiones.add(txtNotifCitas);
-		
-		panel = new JPanel();
-		panel.setBounds(10, 176, 338, 58);
-		panelNotificaiones.add(panel);
-		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 244, 338, 151);
-		panelNotificaiones.add(scrollPane);
-		
-		
-		
-		
-		
-		
+
+		cargarPanelNotificaciones(imageP);
 		
 		JLabel lblCerrar = new JLabel("X");
 		lblCerrar.setToolTipText("Cerrar la aplicación?");
@@ -336,6 +298,65 @@ public class TesToo extends JFrame {
 		new PanelAcceso(ventanaPrincipal, crearWindowsListener());
 	}
 
+	private void cargarPanelNotificaciones(ImagenPanel imageP) {
+		panelNotificaiones = new JPanel();
+		panelNotificaiones.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panelNotificaiones.setForeground(new Color(255, 255, 255));
+		panelNotificaiones.setBackground(new Color(255, 255, 255));
+		panelNotificaiones.setBounds(519, 61, 358, 420);
+		panelNotificaiones.setLayout(null);
+		panelNotificaiones.setVisible(false);
+		imageP.add(panelNotificaiones);
+
+		JLabel lblNewLabel = new JLabel("Notificaciones:");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lblNewLabel.setBounds(10, 10, 207, 22);
+		panelNotificaiones.add(lblNewLabel);
+
+		JPanel panelNotif2 = new JPanel();
+		double size[][] = {{268, 50}, // Columns
+				{50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50}}; // Rows
+		panelNotif2.setLayout(new TableLayout(size));
+
+		txtNotifRevisiones = new JTextArea();
+		txtNotifRevisiones.setRows(1);
+		txtNotifRevisiones.setEditable(false);
+		panelNotif2.add(txtNotifRevisiones, "0, 0");
+
+		JButton aa = new JButton("Hello-0");
+		panelNotif2.add(aa, "1, 0");
+
+		txtNotifCitas = new JTextArea();
+		txtNotifCitas.setText("Próximas citas:");
+		txtNotifCitas.setEditable(false);
+		panelNotif2.add(txtNotifCitas, "0, 1");
+
+		JButton bb = new JButton("Hello-1");
+		panelNotif2.add(bb, "1, 1");
+
+
+
+		for(int i=2; i<15; i++){
+			JTextArea txt = new JTextArea();
+			txt.setText("Próximas citas: "+i);
+			txt.setEditable(false);
+			panelNotif2.add(txt, "0, "+i);
+
+			JButton btn = new JButton("Hello_"+i);
+			btn.setSize(50, 10);
+			panelNotif2.add(btn, "1, "+i);
+		}
+
+
+
+
+
+		JScrollPane scrollPane = new JScrollPane(panelNotif2);
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane.setBounds(10, 42, 338, 368);
+		panelNotificaiones.add(scrollPane);
+	}
+
 	private void importarClientes(Sheet sheet){
 		try{
 			for(int i=1; i<sheet.getPhysicalNumberOfRows(); i++){
@@ -456,10 +477,10 @@ public class TesToo extends JFrame {
 
 			String imagen = "images/notification.png";
 			if (lista.isEmpty()) {
-				txtNotifRevisiones.append("   No hay revisiones próximas.\n");
+				txtNotifRevisiones.append("No hay revisiones próximas.\n");
 				imagen = "images/noNotification.png";
 			}else {
-				txtNotifRevisiones.append("   Próxima revisión:\n");
+				txtNotifRevisiones.append("Próxima revisión:\n");
 			}
 			BufferedImage master5 = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource(imagen)));
 			Image scaled5 = master5.getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH);
@@ -468,7 +489,7 @@ public class TesToo extends JFrame {
 			for(CitaBean cita: lista){
 				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 				String fecha = sdf.format(cita.getFecha());
-				txtNotifRevisiones.append("   Cliente: " + cita.getVehiculoBean().getClienteBean().getNombre() + " " + cita.getVehiculoBean().getClienteBean().getApellido() + " - Última revisión: " + fecha + "\n");
+				txtNotifRevisiones.append("   Cliente: " + cita.getVehiculoBean().getClienteBean().getNombre() + " " + cita.getVehiculoBean().getClienteBean().getApellido() + "\n   Última revisión: " + fecha + "\n");
 			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
